@@ -1,0 +1,25 @@
+FROM ubuntu:22.04
+
+# Install basic tools
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    bash \
+    tree \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create test user
+RUN useradd -m -s /bin/bash testuser
+USER testuser
+WORKDIR /home/testuser
+
+# Copy dotfiles to simulate cloned repository
+COPY --chown=testuser:testuser . .dotfiles/
+
+# Run setup script and test
+RUN cd .dotfiles && ./script/setup.sh
+
+# Verify installation
+RUN tree -a -L 2 /home/testuser || ls -la /home/testuser
+
+CMD ["/bin/bash"]

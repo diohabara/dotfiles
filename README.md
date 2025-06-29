@@ -6,6 +6,20 @@ For macOS and Linux(Ubuntu).
 
 ## setup
 
+### Quick setup
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/diohabara/dotfiles/master/script/setup.sh | bash
+```
+
+### Manual setup
+
+```sh
+git clone https://github.com/diohabara/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+./script/setup.sh
+```
+
 ### macOS
 
 - change Raycast's shortcut `command + space`
@@ -14,12 +28,6 @@ For macOS and Linux(Ubuntu).
   - Google Japanese Input
     - change "Keymap" to "ATOK" in "General"
     - make conversions in "Advanced" halfwidth
-
-### Common
-
-```sh
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply diohabara
-```
 
 - connect GitHub via SSH
 
