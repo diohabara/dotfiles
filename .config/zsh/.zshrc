@@ -44,13 +44,12 @@ export PATH="${PATH}:/usr/local/texlive/2020/bin/x86_64-darwin/"
 export PATH="${PATH}:/Library/TeX/texbin/"
 
 # fzf
-# Doc: https://nixos.wiki/wiki/Fzf
-# shllcheck disable=SC3054
-if [ -n "$(which fzf-share)" ]; then
-  # shellcheck disable=SC1091
-  . "$(fzf-share)/key-bindings.zsh"
-  # shellcheck disable=SC1091
-  . "$(fzf-share)/completion.zsh"
+# Doc: https://github.com/junegunn/fzf
+if [[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ]]; then
+  source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
+fi
+if [[ -f /opt/homebrew/opt/fzf/shell/completion.zsh ]]; then
+  source /opt/homebrew/opt/fzf/shell/completion.zsh
 fi
 
 # zplug

@@ -20,8 +20,15 @@
     zip_file="${font}.zip"
     download_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v${version}/${zip_file}"
     echo "Downloading $download_url"
-    wget "$download_url"
-    unzip "$zip_file" -d "$fonts_dir"
+    if command -v wget &> /dev/null; then
+      wget "$download_url"
+    elif command -v curl &> /dev/null; then
+      curl -L -o "$zip_file" "$download_url"
+    else
+      echo "Error: Neither wget nor curl is available"
+      exit 1
+    fi
+    unzip -q "$zip_file" -d "$fonts_dir"
     rm "$zip_file"
   done
 
