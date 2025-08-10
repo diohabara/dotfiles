@@ -22,7 +22,7 @@ echo "  TEST_DIR: $TEST_DIR"
 
 # Clone current dotfiles to test directory
 echo "📦 Copying dotfiles to test environment..."
-cp -r "$(dirname "$0")/.." "$HOME/.dotfiles"
+(cd "$(dirname "$0")"/.. && tar cf - .) | (mkdir -p "$HOME/.dotfiles" && cd "$HOME/.dotfiles" && tar xf -)
 
 # Run setup script
 echo "🔧 Running setup script..."
