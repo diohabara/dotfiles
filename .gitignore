@@ -28,3 +28,9 @@ yarn-error.log*
 .bash_history
 .history
 .profile
+
+# Zsh completion dump
+.config/zsh/.zcompdump
+
+# Generated config files/binaries from tests
+.config/**/
