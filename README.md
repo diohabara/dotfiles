@@ -29,23 +29,41 @@ cd ~/.dotfiles
     - change "Keymap" to "ATOK" in "General"
     - make conversions in "Advanced" halfwidth
 
-- connect GitHub via SSH
+- Connect GitHub via SSH
 
-  - First follow this link <https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent>.
+  You have two options for managing your SSH keys:
 
-  ```bash
-  ssh-keygen -t ed25519 -C "your_email@example.com"
-  eval "$(ssh-agent -s)"
-  ssh-add ~/.ssh/id_ed25519
-  gh auth login
-  gh ssh-key add ~/.ssh/id_ed25519.pub
-  ```
+  ### Option 1: Using 1Password as your SSH Agent (Recommended)
 
-  - After finishing the instructions, execute this command.
+  This is the recommended and more secure way to manage your SSH keys.
+
+  1.  **Ensure 1Password's SSH Agent is enabled:**
+      *   Open 1Password application.
+      *   Go to Settings/Preferences -> Developer (or SSH) and ensure the SSH agent is turned on.
+
+  2.  **Configure your SSH client:**
+      *   Edit or create the `~/.ssh/config` file.
+      *   Add the following lines to use the 1Password SSH agent:
+
+      ```
+      Host *
+        IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/ssh/agent.sock"
+      ```
+
+      *   After saving, restart your terminal or run `ssh-add -l` to verify that 1Password keys are listed.
+
+  3.  **Add your SSH key to GitHub via 1Password:**
+      *   Generate a new SSH key within 1Password or import an existing one.
+      *   Use `gh auth login` and `gh ssh-key add` as usual. 1Password will handle the key signing.
+
+  
+
+  - After finishing the instructions, execute this command to update your git remote:
 
   ```bash
   cd ~/repo/github.com/diohabara/dotfiles
   git remote set-url origin git@github.com:diohabara/dotfiles.git
+  ```
   ```
 
 ## Troubleshooting
