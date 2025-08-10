@@ -66,6 +66,31 @@ cd ~/.dotfiles
   ```
   ```
 
+### 1Password CLI Configuration (Optional)
+
+For managing 1Password CLI (`op` command) settings, you can create a `~/.op/config` file.
+
+**IMPORTANT SECURITY NOTE:** Do NOT include sensitive information like session tokens or API keys directly in this file if you plan to make your dotfiles public. Use environment variables or 1Password's built-in secure storage for such sensitive data.
+
+Here's an example of a `~/.op/config` file that you can manage with your dotfiles:
+
+```
+# ~/.op/config
+# This file is for 1Password CLI configuration.
+# DO NOT include sensitive information like session tokens directly in a public dotfiles repository.
+
+# Example: Specify a default account shorthand
+# op_account_shorthand = "my_personal_account"
+
+# Example: Specify a default vault
+# op_vault = "Personal"
+
+# Example: Path to the 1Password CLI binary (if not in PATH)
+# op_path = "/Applications/1Password.app/Contents/MacOS/op"
+```
+
+You can manage this file by creating a symlink from your dotfiles repository to `~/.op/config`.
+
 ## Troubleshooting
 
 - If you having difficulty Doom Emacs font rendering, please refer to [this issue](https://github.com/hlissner/doom-emacs/issues/116).
