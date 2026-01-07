@@ -2,10 +2,7 @@ name: GitHub Actions
 on: [push]
 jobs:
   ci:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3

@@ -1,0 +1,40 @@
+#!/bin/sh
+set -e
+
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/.dotfiles}"
+
+# Parse arguments
+DRY_RUN=false
+while [ $# -gt 0 ]; do
+    case $1 in
+        --dry-run|-n)
+            DRY_RUN=true
+            shift
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Usage: $0 [--dry-run|-n]"
+            exit 1
+            ;;
+    esac
+done
+
+# Clone and run setup
+if [ ! -d "$DOTFILES_DIR" ]; then
+    if [ "$DRY_RUN" = true ]; then
+        echo "[DRY RUN] Would clone dotfiles to: $DOTFILES_DIR"
+    else
+        git clone https://github.com/diohabara/dotfiles.git "$DOTFILES_DIR"
+    fi
+fi
+
+if [ "$DRY_RUN" = true ]; then
+    if [ -d "$DOTFILES_DIR" ]; then
+        cd "$DOTFILES_DIR" && ./script/setup.sh --dry-run
+    else
+        echo "[DRY RUN] Would cd to: $DOTFILES_DIR"
+        echo "[DRY RUN] Would run: ./script/setup.sh --dry-run"
+    fi
+else
+    cd "$DOTFILES_DIR" && ./script/setup.sh
+fi
