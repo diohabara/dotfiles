@@ -19,13 +19,66 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-DOTFILES_DIR="$HOME/.dotfiles"
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+DOTFILES_DIR="${DOTFILES_DIR:-$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)}"
 
 # XDG Base Directory
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+LEGACY_DOTFILES_DIR="$HOME/.dotfiles"
+
+cleanup_legacy_symlink() {
+    local path="$1"
+    local target="$2"
+
+    if [ ! -L "$path" ]; then
+        return
+    fi
+
+    if [ "$DRY_RUN" = true ]; then
+        echo "[DRY RUN] Would remove stale symlink: $path -> $target"
+    else
+        rm -f "$path"
+    fi
+}
+
+cleanup_legacy_links() {
+    local path
+    local target
+    local item
+
+    while read -r path; do
+        [ -n "$path" ] || continue
+        target=$(readlink "$path" 2>/dev/null || true)
+        case "$target" in
+            "$LEGACY_DOTFILES_DIR/"*)
+                item=$(basename "$path")
+                if [ ! -e "$DOTFILES_DIR/$item" ]; then
+                    cleanup_legacy_symlink "$path" "$target"
+                fi
+                ;;
+        esac
+    done <<EOF
+$(find "$HOME" -maxdepth 1 -name ".*" -type l ! -name ".git*" ! -name ".gitignore")
+EOF
+
+    while read -r path; do
+        [ -n "$path" ] || continue
+        target=$(readlink "$path" 2>/dev/null || true)
+        case "$target" in
+            "$LEGACY_DOTFILES_DIR/.config/"*)
+                item=$(basename "$path")
+                if [ ! -e "$DOTFILES_DIR/.config/$item" ]; then
+                    cleanup_legacy_symlink "$path" "$target"
+                fi
+                ;;
+        esac
+    done <<EOF
+$(find "$XDG_CONFIG_HOME" -mindepth 1 -maxdepth 1 -type l 2>/dev/null)
+EOF
+}
 
 if [ "$DRY_RUN" = true ]; then
     echo "[DRY RUN] Setting up dotfiles..."
@@ -75,6 +128,8 @@ else
     }
 fi
 
+cleanup_legacy_links
+
 # Use stow for symlink management if available
 if command -v stow >/dev/null 2>&1; then
     if [ "$DRY_RUN" = true ]; then
@@ -109,7 +164,7 @@ if command -v stow >/dev/null 2>&1; then
         if [ -d "$DOTFILES_DIR/.config" ]; then
             find "$DOTFILES_DIR/.config" -maxdepth 1 -type f -exec ln -sf {} "$XDG_CONFIG_HOME/" \;
         fi
-        find "$DOTFILES_DIR" -maxdepth 1 -name ".*" -type f ! -name ".git*" ! -name ".gitignore" -exec ln -sf {} "$HOME/" \;
+        find "$DOTFILES_DIR" -maxdepth 1 -name ".*" -type f ! -name ".DS_Store" ! -name ".git*" ! -name ".gitignore" -exec ln -sf {} "$HOME/" \;
     fi
 else
     # Fallback to manual symlinks
@@ -122,7 +177,7 @@ else
             done
         fi
         if [ -d "$DOTFILES_DIR" ]; then
-            find "$DOTFILES_DIR" -maxdepth 1 -name ".*" -type f ! -name ".git*" ! -name ".editorconfig" | while read -r file; do
+        find "$DOTFILES_DIR" -maxdepth 1 -name ".*" -type f ! -name ".DS_Store" ! -name ".git*" ! -name ".editorconfig" | while read -r file; do
                 filename=$(basename "$file")
                 echo "[DRY RUN] Would create symlink: $HOME/$filename -> $file"
             done
@@ -131,7 +186,7 @@ else
         if [ -d "$DOTFILES_DIR/.config" ]; then
             find "$DOTFILES_DIR/.config" -maxdepth 1 \( -type d -o -type f \) ! -path "$DOTFILES_DIR/.config" -exec ln -sf {} "$XDG_CONFIG_HOME/" \;
         fi
-        find "$DOTFILES_DIR" -maxdepth 1 -name ".*" -type f ! -name ".git*" ! -name ".editorconfig" ! -name ".gitignore" ! -name ".gitattributes" -exec ln -sf {} "$HOME/" \;
+        find "$DOTFILES_DIR" -maxdepth 1 -name ".*" -type f ! -name ".DS_Store" ! -name ".git*" ! -name ".editorconfig" ! -name ".gitignore" ! -name ".gitattributes" -exec ln -sf {} "$HOME/" \;
         # Link .editorconfig, .gitignore, .gitattributes separately
         [ -f "$DOTFILES_DIR/.editorconfig" ] && ln -sf "$DOTFILES_DIR/.editorconfig" "$HOME/.editorconfig"
         [ -f "$DOTFILES_DIR/.gitignore" ] && ln -sf "$DOTFILES_DIR/.gitignore" "$HOME/.gitignore"
