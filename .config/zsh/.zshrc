@@ -79,3 +79,8 @@ fi
 # linker
 FLAG_OPTION="-L$(which lld)"
 export LDFLAGS="$FLAG_OPTION"
+
+if [ -r "${XDG_CONFIG_HOME}/zsh/.zshrc.local" ]; then
+  # Machine-specific interactive shell overrides.
+  . "${XDG_CONFIG_HOME}/zsh/.zshrc.local"
+fi

@@ -49,3 +49,10 @@ git remote set-url origin git@github.com:diohabara/dotfiles.git
 gh repo clone diohabara/cs101
 ```
 
+## zsh local overrides
+
+Shared zsh config lives in [`./.config/zsh/.zshrc`](./.config/zsh/.zshrc).
+If you need machine-specific settings, put them in `~/.config/zsh/.zshrc.local`.
+Tool-specific PATH tweaks and installer-generated hooks such as `uv`'s `~/bin/env` should stay there instead of being committed.
+
+That file is loaded automatically at the end of `.zshrc` when it exists, and it is git-ignored so it can stay local-only.

@@ -32,6 +32,7 @@ yarn-error.log*
 
 # Zsh completion dump
 .config/zsh/.zcompdump
+.config/zsh/.zshrc.local
 
 # Local tool settings
 .claude/settings.local.json
