@@ -35,7 +35,8 @@ yarn-error.log*
 .config/zsh/.zshrc.local
 
 # Local tool settings
-.claude/settings.local.json
+.claude/
+.codex/
 
 # Generated config files/binaries from tests
 .config/**/
