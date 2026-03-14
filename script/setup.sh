@@ -144,10 +144,20 @@ if [ "$DRY_RUN" = true ]; then
     echo "[DRY RUN] Setup simulation complete!"
     echo "[DRY RUN] No actual changes were made."
 else
+    if command -v gh >/dev/null 2>&1; then
+        echo "Configuring GitHub CLI to use SSH for git operations..."
+        if ! gh config set git_protocol ssh; then
+            echo "Warning: Failed to set GitHub CLI git protocol to SSH"
+        fi
+    else
+        echo "GitHub CLI not found; skipping gh SSH protocol configuration"
+    fi
+
     echo "Setup complete!"
     echo ""
     echo "Next steps:"
     echo "1. Run 'gh auth login' for GitHub authentication"
-    echo "2. Configure macOS settings (Raycast, Japanese Input)"
+    echo "2. Verify 'gh repo clone <owner>/<repo>' uses SSH"
+    echo "3. Configure macOS settings (Raycast, Japanese Input)"
 fi
 echo ""

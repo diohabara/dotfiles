@@ -25,6 +25,9 @@ done
 for dot in .zshenv .editorconfig .gitignore .gitattributes .Brewfile; do
     [ -L "$HOME/$dot" ] || { echo "❌ $dot not linked"; fail=1; }
 done
+if command -v gh >/dev/null 2>&1; then
+    [ "$(gh config get git_protocol)" = "ssh" ] || { echo "❌ gh git_protocol is not ssh"; fail=1; }
+fi
 
 # Cleanup
 export HOME="$ORIGINAL_HOME"

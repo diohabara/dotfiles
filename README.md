@@ -43,4 +43,9 @@ cd ~/repo/github.com/diohabara/dotfiles
 git remote set-url origin git@github.com:diohabara/dotfiles.git
 ```
 
+`./script/setup.sh` also sets GitHub CLI's git protocol to SSH, so `gh repo clone` uses `git@github.com:` style URLs by default:
+
+```bash
+gh repo clone diohabara/cs101
+```
 
