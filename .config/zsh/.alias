@@ -14,4 +14,4 @@ gg() { ghq get "$@"; }
 alias yt='yt-dlp -N $(nproc) --merge-output-format mp4'
 ## agent shortcuts
 alias cx='codex --dangerously-bypass-approvals-and-sandbox'
-alias cu='claude --dangerously-skip-permissions'
+alias clu='claude --dangerously-skip-permissions'
